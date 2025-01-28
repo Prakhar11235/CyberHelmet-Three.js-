@@ -8,27 +8,31 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { RGBShiftShader } from 'three/examples/jsm/shaders/RGBShiftShader.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import gsap from 'gsap';
+import LocomotiveScroll from 'locomotive-scroll';
+
+const scroll = new LocomotiveScroll();
+
 const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(40,window.innerWidth/window.innerHeight,0.1,100);
 camera.position.z=5;
 
-// Load HDRI environment map
+
 new RGBELoader()
-  .load('https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/pond_bridge_night_1k.hdr', function(texture) { // Replace with your HDRI path
+  .load('https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/pond_bridge_night_1k.hdr', function(texture) { 
     texture.mapping = THREE.EquirectangularReflectionMapping;
     scene.environment = texture;
     
   });
 
-// Load GLTF Model
+
 let model;
 const loader = new GLTFLoader();
 loader.load(
-  './public/DamagedHelmet.gltf', // Replace with your model path
+  './public/DamagedHelmet.gltf', 
   function (gltf) {
     model=gltf.scene;
     scene.add(model);
-    // Adjust model position/scale if needed
+    
     model.position.set(0, 0, 0);
     model.scale.set(1, 1, 1);
   },
@@ -43,7 +47,7 @@ loader.load(
 const renderer=new THREE.WebGLRenderer({
   canvas:document.querySelector('#draw'),
   antialias:true,
-  alpha:true,
+  alpha:true, // Makes the renderer background transparent, allowing HTML elements behind the canvas to be visible
 });
 renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
@@ -69,8 +73,8 @@ window.addEventListener('resize',()=>{
 });
 
 window.addEventListener('mousemove',(e)=>{
-  const rotationX=(e.clientX/window.innerWidth-0.5)*(Math.PI*0.2);
-  const rotationY=(e.clientY/window.innerHeight-0.5)*(Math.PI*0.2);
+  const rotationX=(e.clientX/window.innerWidth-0.5)*(Math.PI*0.12);
+  const rotationY=(e.clientY/window.innerHeight-0.5)*(Math.PI*0.12);
   gsap.to(model.rotation, {
     x: rotationY,
     y: rotationX,
